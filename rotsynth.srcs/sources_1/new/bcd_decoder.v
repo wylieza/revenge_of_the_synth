@@ -1,5 +1,6 @@
 //Code Origin Notice//
-//This code was provided by the EEE4020 course and has been reused here in this project
+//This code was provided by the EEE4020 course and has been adapted here in this project
+//This code converts a decimal number (0-9) to a 7 bit code to light up correct segements
 
 module bcd_decoder(
     input [3:0]BCD,
