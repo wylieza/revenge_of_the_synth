@@ -43,7 +43,7 @@ module sample_generator(
         sampVal <= 11'd2047;	
       end 
       else begin
-        sampVal <= 11'd1024;
+        sampVal <= 11'd0;
       end    
     end
     else if(waveform == 2'b10) begin
