@@ -149,3 +149,6 @@ rotsynth.sim/top_sim/behav/xsim/xsim.dir/xil_defaultlib/xil_defaultlib.rlx
 rotsynth.sim/top_sim/behav/xsim/xsim.ini
 rotsynth.sim/top_sim/behav/xsim/xvlog.log
 rotsynth.sim/top_sim/behav/xsim/xvlog.pb
+rotsynth.runs/.jobs/vrs_config_7.xml
+rotsynth.runs/.jobs/vrs_config_8.xml
+rotsynth.runs/.jobs/vrs_config_9.xml
