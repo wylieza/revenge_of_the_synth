@@ -52,6 +52,9 @@ assign an_probe = top_uut.AN;
 wire [7:0] ssunits_disable_probe;
 assign ssunits_disable_probe = top_uut.ssunits_disable;
 
+wire [3:0] BCD0_probe;
+assign BCD0_probe = top_uut.m_ssdriver.BCD0;
+
 initial begin
     for (i = 0; i < 100; i = i +1) begin
         #1 CLK100MHZ = ~CLK100MHZ;    

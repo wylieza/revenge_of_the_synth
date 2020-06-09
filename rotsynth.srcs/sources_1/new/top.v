@@ -36,7 +36,7 @@ module top(
 	output reg CF,
 	output reg CG,
 	output reg DP,
-	output reg [7:0] AN = 8'hFF
+	output reg [7:0] AN = 8'hFE
     );
 
 
