@@ -4,7 +4,7 @@
 module ssdriver(
     input clk, reset,
     input [3:0] BCD7, BCD6, BCD5, BCD4, BCD3, BCD2, BCD1, BCD0, //Decimal to display on each ssd unit
-    output reg [8:0] ssunits_disable, //ssd units disable bits (active low)
+    output reg [7:0] ssunits_disable, //ssd units disable bits (active low)
     output reg [7:0] segments_disable //ssd segments disable bits (active low)
 );
 
@@ -27,7 +27,7 @@ reg [15:0]Count;
 // Scroll through the digits, switching one on at a time
 always @(posedge clk) begin
  Count <= Count + 1'b1;
- if (reset) ssunits_disable <= 9'h1FE; //Disable all but first ss unit
+ if (reset) ssunits_disable <= 8'hFE; //Disable all but first ss unit
  else if(&Count) ssunits_disable <= {ssunits_disable[6:0], ssunits_disable[7]}; //enable the next ss unit, disabling the previous
 end
 
@@ -38,14 +38,14 @@ always @(*) begin
         segments_disable[6:0] <= 7'h7F; //under reset, disable all segments
     end else begin
         case(~ssunits_disable) //depending on which ss unit is currently enabled, enable the appropriate segments
-            9'h1 : segments_disable[6:0] <= ~SS[0];
-            9'h2 : segments_disable[6:0] <= ~SS[1];
-            9'h4 : segments_disable[6:0] <= ~SS[2];
-            9'h8 : segments_disable[6:0] <= ~SS[3];
-            9'h16 : segments_disable[6:0] <= ~SS[0];
-            9'h32 : segments_disable[6:0] <= ~SS[1];
-            9'h64 : segments_disable[6:0] <= ~SS[2];
-            9'h128 : segments_disable[6:0] <= ~SS[3];
+            8'd1 : segments_disable[6:0] <= ~SS[0];
+            8'd2 : segments_disable[6:0] <= ~SS[1];
+            8'd4 : segments_disable[6:0] <= ~SS[2];
+            8'd8 : segments_disable[6:0] <= ~SS[3];
+            8'd16 : segments_disable[6:0] <= ~SS[0];
+            8'd32 : segments_disable[6:0] <= ~SS[1];
+            8'd64 : segments_disable[6:0] <= ~SS[2];
+            8'd128 : segments_disable[6:0] <= ~SS[3];
             default: segments_disable[6:0] <= 7'h7F; //if bit corruption occurs, disable all segments
         endcase
     end
