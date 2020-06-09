@@ -4,7 +4,7 @@
 module ssdriver(
     input clk, reset,
     input [3:0] BCD7, BCD6, BCD5, BCD4, BCD3, BCD2, BCD1, BCD0, //Decimal to display on each ssd unit
-    output reg [7:0] ssunits_disable, //ssd units disable bits (active low)
+    output reg [7:0] ssunits_disable = 0, //ssd units disable bits (active low)
     output reg [7:0] segments_disable //ssd segments disable bits (active low)
 );
 
