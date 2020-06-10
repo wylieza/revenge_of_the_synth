@@ -17,6 +17,8 @@ Enable Bit > No
 
 ******************************/
 
+// Testbenching: https://www.edaplayground.com/x/vqu
+
 module sample_generator(
   input clk,
   input [7:0] phIndex,
@@ -32,13 +34,11 @@ module sample_generator(
   reg [10:0] sineSamp = 0;		// Instantiate sine sample value variable
   
   // Create module of the fullsine_256
-  /*
   fullsine_256 fs_samples(
     clk,
     phIndex,
     sineSamp							// Return sample value for sine waveform
-  );	
-  */
+  );
     
   always @(*) begin
     
