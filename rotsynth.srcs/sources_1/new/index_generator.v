@@ -12,17 +12,21 @@ Returns > Phase index: used to access current sample value in memory (0-255) [8-
 Clocking & Reset:
 Requires Clock > Yes
 Reset Bit > No
-Enable Bit > Yes
+Enable Bit > No
 
 ******************************/
+
+// Testbenching: https://www.edaplayground.com/x/3E_y
 
 module index_generator(
   input clk,
   input [12:0] ticT,				// Tick period
-  output reg [7:0] phIndex			// Phase index
+  output [7:0] phIndex				// Phase index
 );
   
   reg [12:0] ticCount = 0;			// Counter to keep track of clock ticks
+  reg [7:0] phIndex = 0;			// Initialise phase idex to 0
+  
   
   always @(posedge clk) begin   
     
@@ -30,9 +34,9 @@ module index_generator(
     
     if (ticCount >= ticT) begin		// Check if cap has been reached
         phIndex <= phIndex + 1;		// The next sample value is needed -> increment phase index 
-        ticCount <= 0;				// Reset tick counter
+        ticCount <= 1;				// Reset tick counter
     end
-    
+
   end
   
 endmodule
