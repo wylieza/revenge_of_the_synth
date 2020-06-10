@@ -66,7 +66,9 @@ debounced_button m_btn_center(CLK100MHZ, BTNC, btn_center);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Seven Segment digits and control
-reg [3:0] ss_ld3, ss_ld2, ss_ld1, ss_ld0, ss_rd3, ss_rd2, ss_rd1, ss_rd0; //'ss' - seven segment, 'l/r' - right/left, 'dn' - digit n (when higher n is higher significance (MSB vs LSB))
+reg[13:0] ssd_left_value;
+reg[13:0] ssd_right_value;
+wire [3:0] ss_ld3, ss_ld2, ss_ld1, ss_ld0, ss_rd3, ss_rd2, ss_rd1, ss_rd0; //'ss' - seven segment, 'l/r' - right/left, 'dn' - digit n (when higher n is higher significance (MSB vs LSB))
 wire [7:0] ssunits_disable; //disable individual units
 wire [7:0] segments_disable; //disable individual segments
 
@@ -86,6 +88,10 @@ always @(*) begin
 	DP <= segments_disable[7];
 end
 
+//SS Decimal to BCD converter modules
+decimal_to_bcd m_decimal_to_bcd_left(CLK100MHZ, ssd_left_value, ss_ld3, ss_ld2, ss_ld1, ss_ld0);
+decimal_to_bcd m_decimal_to_bcd_right(CLK100MHZ, ssd_right_value, ss_rd3, ss_rd2, ss_rd1, ss_rd0);
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -99,6 +105,17 @@ end
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Clock Cycle Logic
 always @(posedge CLK100MHZ) begin
+    
+    if(btn_left) begin
+        ssd_left_value <= 14'd4587;
+    end else begin
+        ssd_left_value <= 14'd0;
+    end
+    
+    ssd_right_value <= 1234;
+
+
+    /*
     if(btn_left) begin
         ss_ld3 <= 4'd3;
         ss_ld2 <= 4'd2;
@@ -120,9 +137,9 @@ always @(posedge CLK100MHZ) begin
         ss_rd3 <= 4'd8;
         ss_rd2 <= 4'd7;
         ss_rd1 <= 4'd6;
-        ss_rd0 <= 4'd5;
-    
+        ss_rd0 <= 4'd5;    
     end
+    */
     
     if(btn_center) begin
         leds[15:0] <= 16'hFFFF;
