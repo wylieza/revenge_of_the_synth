@@ -13,32 +13,39 @@ Returns > Sample Value: [11-bit]
 Clocking & Reset:
 Requires Clock > Yes
 Reset Bit > No
-Enable Bit > Yes
+Enable Bit > No
 
 ******************************/
 
 module sample_generator(
   input clk,
   input [7:0] phIndex,
-  input [1:0] waveform,		// 00: Sine, 	01: Square, 	10: Triangle
+  input [1:0] waveform,		// 00: Sine, 	01: Square, 	10: Sawtooth
   output reg [10:0] sampVal
 );
   
+  // Setup wavefrom identifier constants
+  parameter [1:0] SINE = 2'b00;
+  parameter [1:0] SQUARE = 2'b01;
+  parameter [1:0] SAW = 2'b11;
+  
   reg [10:0] sineSamp = 0;		// Instantiate sine sample value variable
   
-  //Create module of the fullsine_256
+  // Create module of the fullsine_256
+  /*
   fullsine_256 fs_samples(
     clk,
     phIndex,
     sineSamp							// Return sample value for sine waveform
   );	
- 
-  always @(phIndex, waveform) begin
+  */
     
-    if(!waveform) begin      
+  always @(*) begin
+    
+    if(waveform == SINE) begin      
       sampVal <= sineSamp;				// Set sinewave sample value
     end 
-    else if(waveform == 2'b01) begin
+    else if(waveform == SQUARE) begin
       if(phIndex < 8'd128) begin		// Set square wave sample value
         sampVal <= 11'd2047;	
       end 
@@ -46,10 +53,11 @@ module sample_generator(
         sampVal <= 11'd0;
       end    
     end
-    else if(waveform == 2'b10) begin
-      sampVal <= (phIndex<<2) + 1024;	// Set triangle ramp value (propto phase index)
+    else if(waveform == SAW) begin
+      sampVal <= (phIndex<<3);	// Set sawtooth value (propto phase index)
     end else begin
       sampVal <= 1024;					// Default
+    end
     
   end
   
