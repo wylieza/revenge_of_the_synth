@@ -94,13 +94,19 @@ decimal_to_bcd m_decimal_to_bcd_right(CLK100MHZ, ssd_right_value, ss_rd3, ss_rd2
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Voices
+//v1
 reg [12:0] tick_period_1 = 13'd781; //ticT = 100e6/(freq*256)
-reg [1:0] waveform_1 = 0; // 00: Sine, 	01: Square, 	10: Triangle
+reg [1:0] waveform_1 = 2'd1; // 00: Sine, 	01: Square, 	10: Triangle
 wire [10:0] sample_value_1;
+//v2
+reg [12:0] tick_period_2 = 13'd781; //ticT = 100e6/(freq*256)
+reg [1:0] waveform_2 = 2'd2; // 00: Sine, 	01: Square, 	10: Triangle
+wire [10:0] sample_value_2;
 
 
 //Function Generators
 function_generator m_fg_1(CLK100MHZ, tick_period_1, waveform_1, sample_value_1);
+//function_generator m_fg_2(CLK100MHZ, tick_period_2, waveform_2, sample_value_2);
 
 
 
@@ -137,8 +143,10 @@ always @(posedge CLK100MHZ) begin
     
     if(btn_left) begin
         ssd_left_value <= 14'd4587;
+        tick_period_1 = 13'd1562;
     end else begin
         ssd_left_value <= 14'd0;
+        tick_period_1 = 13'd781;
     end
     
     ssd_right_value <= 1234;
