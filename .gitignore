@@ -294,3 +294,8 @@ rotsynth.srcs/sources_1/ip/quartsine_mem/sim/quartsine_mem.v
 rotsynth.srcs/sources_1/ip/quartsine_mem/simulation/blk_mem_gen_v8_4.v
 rotsynth.srcs/sources_1/ip/quartsine_mem/summary.log
 rotsynth.srcs/sources_1/ip/quartsine_mem/synth/quartsine_mem.vhd
+rotsynth.runs/.jobs/vrs_config_15.xml
+rotsynth.runs/.jobs/vrs_config_16.xml
+rotsynth.runs/.jobs/vrs_config_17.xml
+rotsynth.runs/.jobs/vrs_config_18.xml
+rotsynth.runs/.jobs/vrs_config_19.xml
