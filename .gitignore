@@ -154,3 +154,6 @@ rotsynth.runs/.jobs/vrs_config_8.xml
 rotsynth.runs/.jobs/vrs_config_9.xml
 rotsynth.runs/.jobs/vrs_config_10.xml
 rotsynth.runs/.jobs/vrs_config_11.xml
+rotsynth.runs/.jobs/vrs_config_12.xml
+rotsynth.runs/synth_1/.vivado.error.rst
+rotsynth.runs/synth_1/__synthesis_is_running__
