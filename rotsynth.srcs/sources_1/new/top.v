@@ -94,9 +94,13 @@ decimal_to_bcd m_decimal_to_bcd_right(CLK100MHZ, ssd_right_value, ss_rd3, ss_rd2
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Voices
+//v0
+reg [12:0] tick_period_0 = 13'd781; //ticT = 100e6/(freq*256)
+reg [1:0] waveform_0 = 2'd1; // 00: Sine, 	01: Square, 	10: Triangle
+wire [10:0] sample_value_0;
 //v1
-reg [12:0] tick_period_1 = 13'd781; //ticT = 100e6/(freq*256)
-reg [1:0] waveform_1 = 2'd1; // 00: Sine, 	01: Square, 	10: Triangle
+reg [12:0] tick_period_1 = 13'd1562; //ticT = 100e6/(freq*256)
+reg [1:0] waveform_1 = 2'd3; // 00: Sine, 	01: Square, 	11: Sawtooth
 wire [10:0] sample_value_1;
 //v2
 reg [12:0] tick_period_2 = 13'd781; //ticT = 100e6/(freq*256)
@@ -104,9 +108,11 @@ reg [1:0] waveform_2 = 2'd2; // 00: Sine, 	01: Square, 	10: Triangle
 wire [10:0] sample_value_2;
 
 
+
+
 //Function Generators
+function_generator m_fg_2(CLK100MHZ, tick_period_0, waveform_0, sample_value_0);
 function_generator m_fg_1(CLK100MHZ, tick_period_1, waveform_1, sample_value_1);
-//function_generator m_fg_2(CLK100MHZ, tick_period_2, waveform_2, sample_value_2);
 
 
 
@@ -115,7 +121,10 @@ function_generator m_fg_1(CLK100MHZ, tick_period_1, waveform_1, sample_value_1);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Voice Mixer Setup
+reg [7:0] enable_mask = 8'b0;
+wire [10:0] mixed_audio_sv;
 
+//mixer m_mixer(sample_value_0, sample_value_1, sample_value_2, sample_value_3, sample_value_4, sample_value_5, sample_value_6, sample_value_7, enable_mask, mixed_audio_sv);
 
 
 
@@ -126,7 +135,7 @@ assign AUD_SD = 1'b1;  // Enable audio out
 //Set up audio PWMor and attach the AUD_PWM pin to it
 pwmor m_pwmor(
     CLK100MHZ,
-    sample_value_1,
+    mixed_audio_sv,
     AUD_PWM
 );
 
@@ -140,46 +149,36 @@ pwmor m_pwmor(
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Clock Cycle Logic
 always @(posedge CLK100MHZ) begin
+
+    ssd_left_value <= tick_period_0;
+    ssd_right_value <= tick_period_1;
     
-    if(btn_left) begin
-        ssd_left_value <= 14'd4587;
-        tick_period_1 = 13'd1562;
+    if(btn_left) begin        
+        enable_mask = enable_mask | 8'b1;
     end else begin
-        ssd_left_value <= 14'd0;
-        tick_period_1 = 13'd781;
+        enable_mask = enable_mask & ~(8'b1);
     end
     
-    ssd_right_value <= 1234;
+    if(btn_right) begin        
+        enable_mask = enable_mask | 8'd2;
+    end else begin
+        enable_mask = enable_mask & ~(8'd2);
+    end
+    
 
 
-    /*
-    if(btn_left) begin
-        ss_ld3 <= 4'd3;
-        ss_ld2 <= 4'd2;
-        ss_ld1 <= 4'd1;
-        ss_ld0 <= 4'd0;        
-    end else begin
-        ss_ld3 <= 4'd4;
-        ss_ld2 <= 4'd3;
-        ss_ld1 <= 4'd2;
-        ss_ld0 <= 4'd1;
-    end
-    
-    if(btn_right) begin
-        ss_rd3 <= 4'd9;
-        ss_rd2 <= 4'd8;
-        ss_rd1 <= 4'd7;
-        ss_rd0 <= 4'd6;        
-    end else begin
-        ss_rd3 <= 4'd8;
-        ss_rd2 <= 4'd7;
-        ss_rd1 <= 4'd6;
-        ss_rd0 <= 4'd5;    
-    end
-    */
-    
     if(btn_center) begin
         leds[15:0] <= 16'hFFFF;
+        
+        if (tick_period_0 > 1000) begin
+            tick_period_0 = 13'd781;
+            tick_period_1 = 13'd1562;
+        end else begin
+            tick_period_0 = 13'd1001;
+            tick_period_1 = 13'd1001;        
+        end
+        
+        
     end else begin
         leds[15:0] <= 16'h9999;
     end
