@@ -22,7 +22,7 @@ Enable Bit > No
 module sample_generator(
   input clk,
   input [7:0] phIndex,
-  input [1:0] waveform,		// 00: Sine, 	01: Square, 	10: Sawtooth
+  input [1:0] waveform,		// 00: Sine, 	01: Square, 	11: Sawtooth
   output reg [10:0] sampVal
 );
   
