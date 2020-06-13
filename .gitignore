@@ -447,3 +447,11 @@ rotsynth.sim/sine_debug/behav/xsim/funcGen_tb_vlog.prj
 rotsynth.sim/sine_debug/behav/xsim/funcGen_tb_behav.wdb
 rotsynth.sim/sine_debug/behav/xsim/funcGen_tb.tcl
 rotsynth.runs/.jobs/vrs_config_32.xml
+rotsynth.srcs/sim_1/new/fullsine_256_tb.v
+rotsynth.srcs/sim_1/new/funcGen_tb.v
+rotsynth.srcs/sim_1/new/samp_gen_adapted_tb.v
+rotsynth.srcs/sim_1/new/sampGen_tb.v
+rotsynth.srcs/sine_debug/new/fullsine_256_tb.v
+rotsynth.srcs/sine_debug/new/funcGen_tb.v
+rotsynth.srcs/sine_debug/new/samp_gen_adapted_tb.v
+rotsynth.srcs/sine_debug/new/sampGen_tb.v
