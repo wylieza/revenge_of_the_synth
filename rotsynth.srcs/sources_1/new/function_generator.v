@@ -22,7 +22,7 @@ Enable Bit > Yes
 module function_generator(
   input clk,
   input [12:0] ticT,				// Tick period
-  input [1:0] waveform,				// 00: Sine, 	01: Square, 	10: Triangle
+  input [1:0] waveform,				// 00: Sine, 	01: Square, 	11: Sawtooth
   output [10:0] sampVal
 );
   
