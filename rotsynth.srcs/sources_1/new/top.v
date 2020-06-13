@@ -94,29 +94,20 @@ decimal_to_bcd m_decimal_to_bcd_right(CLK100MHZ, ssd_right_value, ss_rd3, ss_rd2
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Voices
-//v0
-reg [12:0] tick_period_0 = 13'd781; //ticT = 100e6/(freq*256)
-reg [1:0] waveform_0 = 2'd1; // 00: Sine, 	01: Square, 	10: Triangle
-wire [10:0] sample_value_0;
-//v1
-reg [12:0] tick_period_1 = 13'd1562; //ticT = 100e6/(freq*256)
-reg [1:0] waveform_1 = 2'd3; // 00: Sine, 	01: Square, 	11: Sawtooth
-wire [10:0] sample_value_1;
-//v2
-reg [12:0] tick_period_2 = 13'd781; //ticT = 100e6/(freq*256)
-reg [1:0] waveform_2 = 2'd2; // 00: Sine, 	01: Square, 	10: Triangle
-wire [10:0] sample_value_2;
-
-
+reg [12:0] tick_periods [7:0]; // ticT = 100e6/(freq*256)
+reg [1:0] waveforms [7:0];
+wire [10:0] sample_values [7:0]; // 00: Sine, 	01: Square, 	11: Sawtooth
 
 
 //Function Generators
-function_generator m_fg_2(CLK100MHZ, tick_period_0, waveform_0, sample_value_0);
-function_generator m_fg_1(CLK100MHZ, tick_period_1, waveform_1, sample_value_1);
-
-
-
-
+function_generator m_fg_0(CLK100MHZ, tick_periods[0], waveforms[0], sample_values[0]);
+function_generator m_fg_1(CLK100MHZ, tick_periods[1], waveforms[1], sample_values[1]);
+function_generator m_fg_2(CLK100MHZ, tick_periods[2], waveforms[2], sample_values[2]);
+function_generator m_fg_3(CLK100MHZ, tick_periods[3], waveforms[3], sample_values[3]);
+function_generator m_fg_4(CLK100MHZ, tick_periods[4], waveforms[4], sample_values[4]);
+function_generator m_fg_5(CLK100MHZ, tick_periods[5], waveforms[5], sample_values[5]);
+function_generator m_fg_6(CLK100MHZ, tick_periods[6], waveforms[6], sample_values[6]);
+function_generator m_fg_7(CLK100MHZ, tick_periods[7], waveforms[7], sample_values[7]);
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -124,9 +115,7 @@ function_generator m_fg_1(CLK100MHZ, tick_period_1, waveform_1, sample_value_1);
 reg [7:0] enable_mask = 8'b0;
 wire [10:0] mixed_audio_sv;
 
-//mixer m_mixer(sample_value_0, sample_value_1, sample_value_2, sample_value_3, sample_value_4, sample_value_5, sample_value_6, sample_value_7, enable_mask, mixed_audio_sv);
-
-
+mixer m_mixer(sample_values[0], sample_values[1], sample_values[2], sample_values[3], sample_values[4], sample_values[5], sample_values[6], sample_values[7], enable_mask, mixed_audio_sv);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //PWM Audio Configuration
@@ -141,7 +130,28 @@ pwmor m_pwmor(
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Voice enable using switches
 
+always @(*) begin
+    enable_mask[7:3] <= SW[7:3];
+end
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//SSD Update
+
+always @(*) begin
+    ssd_left_value <= tick_periods[0];
+    ssd_right_value <= tick_periods[1];
+end
+
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -150,39 +160,46 @@ pwmor m_pwmor(
 //Clock Cycle Logic
 always @(posedge CLK100MHZ) begin
 
-    ssd_left_value <= tick_period_0;
-    ssd_right_value <= tick_period_1;
-    
-    if(btn_left) begin        
-        enable_mask = enable_mask | 8'b1;
-    end else begin
-        enable_mask = enable_mask & ~(8'b1);
-    end
-    
-    if(btn_right) begin        
-        enable_mask = enable_mask | 8'd2;
-    end else begin
-        enable_mask = enable_mask & ~(8'd2);
-    end
     
 
+    waveforms[0] <= 2'b1;
+    waveforms[1] <= 2'b1;
+    waveforms[2] <= 2'b1;
+    waveforms[3] <= 2'b11;
+    waveforms[4] <= 2'b11;
+    waveforms[5] <= 2'b11;
+    waveforms[6] <= 2'b1;
+    waveforms[7] <= 2'b11;
+    
+
+    tick_periods[0] <= 13'd1493; //Middle C
+    tick_periods[1] <= 13'd1330; //D
+    tick_periods[2] <= 13'd1185; //E
+    tick_periods[3] <= 13'd1493;
+    tick_periods[4] <= 13'd1330;
+    tick_periods[5] <= 13'd1185;
+    tick_periods[6] <= 13'd1000;
+    tick_periods[7] <= 13'd1000;  
+
+    if(btn_left)
+        enable_mask[0] <= 1'b1;
+    else
+        enable_mask[0] <= 1'b0;
 
     if(btn_center) begin
         leds[15:0] <= 16'hFFFF;
+        enable_mask[1] <= 1'b1;
+    end else
+        enable_mask[1] <= 1'b0;
         
-        if (tick_period_0 > 1000) begin
-            tick_period_0 = 13'd781;
-            tick_period_1 = 13'd1562;
-        end else begin
-            tick_period_0 = 13'd1001;
-            tick_period_1 = 13'd1001;        
-        end
+    if(btn_right)
+        enable_mask[2] <= 1'b1;
+    else
+        enable_mask[2] <= 1'b0;
         
-        
-    end else begin
-        leds[15:0] <= 16'h9999;
-    end
-
+    
+    
+    leds[15:0] <= 16'h9999;
 
 
 
