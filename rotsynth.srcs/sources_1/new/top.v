@@ -162,9 +162,9 @@ always @(posedge CLK100MHZ) begin
 
     
 
-    waveforms[0] <= 2'b1;
-    waveforms[1] <= 2'b1;
-    waveforms[2] <= 2'b1;
+    waveforms[0] <= 2'b0;
+    waveforms[1] <= 2'b0;
+    waveforms[2] <= 2'b0;
     waveforms[3] <= 2'b11;
     waveforms[4] <= 2'b11;
     waveforms[5] <= 2'b11;

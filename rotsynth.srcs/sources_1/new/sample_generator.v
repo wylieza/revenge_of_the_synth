@@ -31,7 +31,7 @@ module sample_generator(
   parameter [1:0] SQUARE = 2'b01;
   parameter [1:0] SAW = 2'b11;
   
-  wire [10:0] sineSamp = 0;		// Instantiate sine sample value variable
+  wire [10:0] sineSamp;		// Instantiate sine sample value variable
   
   // Create module of the fullsine_256
   fullsine_256 fs_samples(
