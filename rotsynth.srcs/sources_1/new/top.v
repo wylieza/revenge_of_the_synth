@@ -25,6 +25,7 @@ module top(
     input BTNL,
     input BTNR,
     input BTND,
+    input [10:1] JA,
     output AUD_PWM, 
     output AUD_SD,
     output [15:0] LED,
@@ -56,6 +57,7 @@ wire btn_right;
 wire btn_up;
 wire btn_down;
 wire btn_center;
+wire btn1;
 
 //Debounce module instantiation
 debounced_button m_btn_left(CLK100MHZ, BTNL, btn_left);
@@ -63,6 +65,8 @@ debounced_button m_btn_right(CLK100MHZ, BTNR, btn_right);
 debounced_button m_btn_up(CLK100MHZ, BTNU, btn_up);
 debounced_button m_btn_down(CLK100MHZ, BTND, btn_down);
 debounced_button m_btn_center(CLK100MHZ, BTNC, btn_center);
+
+debounced_button m_btn_one(CLK100MHZ, JA[1], btn1);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Seven Segment digits and control
@@ -133,7 +137,7 @@ pwmor m_pwmor(
 //Voice enable using switches
 
 always @(*) begin
-    enable_mask[7:3] <= SW[7:3];
+    //enable_mask[7:4] <= SW[7:4];
 end
 
 
@@ -175,7 +179,7 @@ always @(posedge CLK100MHZ) begin
     tick_periods[0] <= 13'd1493; //Middle C
     tick_periods[1] <= 13'd1330; //D
     tick_periods[2] <= 13'd1185; //E
-    tick_periods[3] <= 13'd1493;
+    tick_periods[3] <= 13'd2000;
     tick_periods[4] <= 13'd1330;
     tick_periods[5] <= 13'd1185;
     tick_periods[6] <= 13'd1000;
@@ -196,6 +200,11 @@ always @(posedge CLK100MHZ) begin
         enable_mask[2] <= 1'b1;
     else
         enable_mask[2] <= 1'b0;
+        
+    if(btn1)
+        enable_mask[3] <= 1'b1;
+    else
+        enable_mask[3] <= 1'b0;
         
     
     

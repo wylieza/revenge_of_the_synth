@@ -455,3 +455,7 @@ rotsynth.srcs/sine_debug/new/fullsine_256_tb.v
 rotsynth.srcs/sine_debug/new/funcGen_tb.v
 rotsynth.srcs/sine_debug/new/samp_gen_adapted_tb.v
 rotsynth.srcs/sine_debug/new/sampGen_tb.v
+rotsynth.runs/.jobs/vrs_config_33.xml
+rotsynth.runs/.jobs/vrs_config_34.xml
+rotsynth.runs/.jobs/vrs_config_35.xml
+rotsynth.runs/.jobs/vrs_config_36.xml
