@@ -467,3 +467,7 @@ rotsynth.runs/.jobs/vrs_config_41.xml
 rotsynth.runs/.jobs/vrs_config_42.xml
 rotsynth.runs/.jobs/vrs_config_43.xml
 rotsynth.runs/.jobs/vrs_config_44.xml
+rotsynth.runs/impl_1/.Xil/Vivado-19460-justin-wylie/wt/project.wpc
+rotsynth.runs/impl_1/.Xil/Vivado-19460-justin-wylie/realtime/tmp/resynth_cleanup.tcl
+rotsynth.runs/impl_1/.Xil/Vivado-19460-justin-wylie/.lpr
+rotsynth.runs/.jobs/vrs_config_45.xml
