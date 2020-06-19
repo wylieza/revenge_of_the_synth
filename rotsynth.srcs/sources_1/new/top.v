@@ -71,6 +71,11 @@ wire btna10;
 wire btnb1;
 wire btnb2;
 
+reg btnl_ls;
+reg btnr_ls;
+reg btnu_ls;
+reg btnd_ls;
+
 
 //Debounce module instantiation
 debounced_button m_btn_left(CLK100MHZ, BTNL, btn_left);
@@ -191,31 +196,31 @@ end
 //Clock Cycle Logic
 always @(posedge CLK100MHZ) begin
 
-    waveforms[0] <= 2'b0;
-    waveforms[1] <= 2'b0;
-    waveforms[2] <= 2'b0;
-    waveforms[3] <= 2'b0;
-    waveforms[4] <= 2'b0;
-    waveforms[5] <= 2'b0;
-    waveforms[6] <= 2'b0;
-    waveforms[7] <= 2'b0;
-    waveforms[8] <= 2'b0;
-    waveforms[9] <= 2'b0;
-    waveforms[10] <= 2'b0;
-    waveforms[11] <= 2'b0;
+    waveforms[0] <= waveform;
+    waveforms[1] <= waveform;
+    waveforms[2] <= waveform;
+    waveforms[3] <= waveform;
+    waveforms[4] <= waveform;
+    waveforms[5] <= waveform;
+    waveforms[6] <= waveform;
+    waveforms[7] <= waveform;
+    waveforms[8] <= waveform;
+    waveforms[9] <= waveform;
+    waveforms[10] <= waveform;
+    waveforms[11] <= waveform;
 
-    tick_periods[0] <= 13'd1493; //Middle C
-    tick_periods[1] <= 13'd1330; //D
-    tick_periods[2] <= 13'd1185; //E
-    tick_periods[3] <= 13'd1055;
-    tick_periods[4] <= 13'd940;
-    tick_periods[5] <= 13'd838;
-    tick_periods[6] <= 13'd746;
-    tick_periods[7] <= 13'd665;  
-    tick_periods[8] <= 13'd592;  
-    tick_periods[9] <= 13'd527;  
-    tick_periods[10] <= 13'd470;  
-    tick_periods[11] <= 13'd419;  
+    tick_periods[0] <= (13'd791 >> octave) << 1;
+    tick_periods[1] <= (13'd838 >> octave) << 1;
+    tick_periods[2] <= (13'd888 >> octave) << 1;
+    tick_periods[3] <= (13'd941 >> octave) << 1;
+    tick_periods[4] <= (13'd996 >> octave) << 1;
+    tick_periods[5] <= (13'd1056 >> octave) << 1;
+    tick_periods[6] <= (13'd1119 >> octave) << 1;
+    tick_periods[7] <= (13'd1185 >> octave) << 1;  
+    tick_periods[8] <= (13'd1256 >> octave) << 1;  
+    tick_periods[9] <= (13'd1330 >> octave) << 1;  
+    tick_periods[10] <= (13'd1409 >> octave) << 1;  
+    tick_periods[11] <= (13'd1493 >> octave) << 1;  
 
 
     if(btn_center) begin
@@ -239,8 +244,37 @@ always @(posedge CLK100MHZ) begin
     enable_mask[11] <= btnb4;
     
     
+    btnl_ls <= btn_left;
+    btnr_ls <= btn_right;
+    btnu_ls <= btn_up;
+    btnd_ls <= btn_down;
     
+    
+    if(btn_up && ~btnu_ls) begin
+        octave <= octave + 2'b1;
+        if (octave == 2'd2)
+            octave <= 2'b0;
+    end          
+    
+    if(btn_down && ~btnd_ls) begin
+        octave <= octave - 2'b1;
+        if (octave == 2'd0)
+            octave <= 2'd2;
+    end
         
+    if(btn_left && ~btnl_ls) begin
+        waveform <= waveform - 2'b1;
+        if (waveform == 2'd3)
+            waveform <= 2'd1;
+    end
+        
+    if(btn_right && ~btnr_ls) begin
+        waveform <= waveform + 2'b1;
+        if (waveform == 2'd1)
+            waveform <= 2'd3;
+    end
+        
+      
     
     
     
