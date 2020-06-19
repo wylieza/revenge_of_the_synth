@@ -26,7 +26,7 @@ module top(
     input BTNR,
     input BTND,
     input [10:1] JA,
-    input [2:1] JB,
+    input [4:1] JB,
     output AUD_PWM, 
     output AUD_SD,
     output [15:0] LED,
@@ -145,7 +145,7 @@ function_generator m_fg_11(CLK100MHZ, tick_periods[11], waveforms[11], sample_va
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Voice Mixer Setup
-reg [7:0] enable_mask = 8'b0;
+reg [11:0] enable_mask = 8'b0;
 wire [10:0] mixed_audio_sv;
 
 mixer m_mixer(sample_values[0], sample_values[1], sample_values[2], sample_values[3], sample_values[4], sample_values[5], sample_values[6], sample_values[7], sample_values[8], sample_values[9], sample_values[10], sample_values[11], enable_mask, mixed_audio_sv);
@@ -163,19 +163,17 @@ pwmor m_pwmor(
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Voice enable using switches
-
-always @(*) begin
-    //enable_mask[7:4] <= SW[7:4];
-end
+//Octave and Waveform Selection
+reg [1:0] octave = 2'b1;
+reg [1:0] waveform = 2'b0;
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //SSD Update
 
 always @(*) begin
-    ssd_left_value <= tick_periods[0];
-    ssd_right_value <= tick_periods[1];
+    ssd_left_value <= waveform;
+    ssd_right_value <= octave;
 end
 
 
@@ -222,6 +220,8 @@ always @(posedge CLK100MHZ) begin
 
     if(btn_center) begin
         leds[15:0] <= 16'hFFFF;
+        octave <= 2'b1;
+        waveform <= 2'b0;        
     end else
         leds[15:0] <= 16'h9999;
         
@@ -237,6 +237,9 @@ always @(posedge CLK100MHZ) begin
     enable_mask[9] <= btnb2;
     enable_mask[10] <= btnb3;
     enable_mask[11] <= btnb4;
+    
+    
+    
         
     
     
