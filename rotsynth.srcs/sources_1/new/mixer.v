@@ -30,14 +30,19 @@ module mixer(
     input [10:0] signal_f,
     input [10:0] signal_g,
     input [10:0] signal_h,
+    input [10:0] signal_i,
+    input [10:0] signal_j,
+    input [10:0] signal_k,
+    input [10:0] signal_l,
+    
     // Enabled bitmask input
-    input [7:0] enabled,
+    input [11:0] enabled,
     // Outputs
     output [10:0] signal_mixed
 );
 
     // TODO: Is there a more efficient way of doing this using logic instead of multiplication?
-    wire [13:0] signal_mixed_prescale =
+    wire [15:0] signal_mixed_prescale =
         enabled[0] * signal_a + 
         enabled[1] * signal_b + 
         enabled[2] * signal_c + 
@@ -45,9 +50,13 @@ module mixer(
         enabled[4] * signal_e + 
         enabled[5] * signal_f + 
         enabled[6] * signal_g + 
-        enabled[7] * signal_h;
+        enabled[7] * signal_h +
+        enabled[8] * signal_i + 
+        enabled[9] * signal_j + 
+        enabled[10] * signal_k + 
+        enabled[11] * signal_l;
 
     // Normalize the mixed signal back to 11 bits
-    assign signal_mixed = (signal_mixed_prescale >> 3);
+    assign signal_mixed = (signal_mixed_prescale >> 5);
 
 endmodule
