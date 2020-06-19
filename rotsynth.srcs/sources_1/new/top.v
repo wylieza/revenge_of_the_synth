@@ -26,6 +26,7 @@ module top(
     input BTNR,
     input BTND,
     input [10:1] JA,
+    input [2:1] JB,
     output AUD_PWM, 
     output AUD_SD,
     output [15:0] LED,
@@ -57,7 +58,19 @@ wire btn_right;
 wire btn_up;
 wire btn_down;
 wire btn_center;
-wire btn1;
+wire btna1;
+wire btna2;
+wire btna3;
+wire btna4;
+wire btna5;
+wire btna6;
+wire btna7;
+wire btna8;
+wire btna9;
+wire btna10;
+wire btnb1;
+wire btnb2;
+
 
 //Debounce module instantiation
 debounced_button m_btn_left(CLK100MHZ, BTNL, btn_left);
@@ -66,7 +79,19 @@ debounced_button m_btn_up(CLK100MHZ, BTNU, btn_up);
 debounced_button m_btn_down(CLK100MHZ, BTND, btn_down);
 debounced_button m_btn_center(CLK100MHZ, BTNC, btn_center);
 
-debounced_button m_btn_one(CLK100MHZ, JA[1], btn1);
+debounced_button m_btn_aone(CLK100MHZ, JA[1], btna1);
+debounced_button m_btn_atwo(CLK100MHZ, JA[2], btna2);
+debounced_button m_btn_athree(CLK100MHZ, JA[3], btna3);
+debounced_button m_btn_afour(CLK100MHZ, JA[4], btna4);
+debounced_button m_btn_aseven(CLK100MHZ, JA[7], btna7);
+debounced_button m_btn_aeight(CLK100MHZ, JA[8], btna8);
+debounced_button m_btn_anine(CLK100MHZ, JA[9], btna9);
+debounced_button m_btn_aten(CLK100MHZ, JA[10], btna10);
+debounced_button m_btn_bone(CLK100MHZ, JB[1], btnb1);
+debounced_button m_btn_btwo(CLK100MHZ, JB[2], btnb2);
+debounced_button m_btn_afive(CLK100MHZ, JB[3], btnb3);
+debounced_button m_btn_asix(CLK100MHZ, JB[4], btnb4);
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Seven Segment digits and control
@@ -98,9 +123,9 @@ decimal_to_bcd m_decimal_to_bcd_right(CLK100MHZ, ssd_right_value, ss_rd3, ss_rd2
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Voices
-reg [12:0] tick_periods [7:0]; // ticT = 100e6/(freq*256)
-reg [1:0] waveforms [7:0];
-wire [10:0] sample_values [7:0]; // 00: Sine, 	01: Square, 	11: Sawtooth
+reg [12:0] tick_periods [11:0]; // ticT = 100e6/(freq*256)
+reg [1:0] waveforms [11:0];
+wire [10:0] sample_values [11:0]; // 00: Sine, 	01: Square, 	11: Sawtooth
 
 
 //Function Generators
@@ -112,6 +137,10 @@ function_generator m_fg_4(CLK100MHZ, tick_periods[4], waveforms[4], sample_value
 function_generator m_fg_5(CLK100MHZ, tick_periods[5], waveforms[5], sample_values[5]);
 function_generator m_fg_6(CLK100MHZ, tick_periods[6], waveforms[6], sample_values[6]);
 function_generator m_fg_7(CLK100MHZ, tick_periods[7], waveforms[7], sample_values[7]);
+function_generator m_fg_8(CLK100MHZ, tick_periods[8], waveforms[8], sample_values[8]);
+function_generator m_fg_9(CLK100MHZ, tick_periods[9], waveforms[9], sample_values[9]);
+function_generator m_fg_10(CLK100MHZ, tick_periods[10], waveforms[10], sample_values[10]);
+function_generator m_fg_11(CLK100MHZ, tick_periods[11], waveforms[11], sample_values[11]);
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -119,7 +148,7 @@ function_generator m_fg_7(CLK100MHZ, tick_periods[7], waveforms[7], sample_value
 reg [7:0] enable_mask = 8'b0;
 wire [10:0] mixed_audio_sv;
 
-mixer m_mixer(sample_values[0], sample_values[1], sample_values[2], sample_values[3], sample_values[4], sample_values[5], sample_values[6], sample_values[7], enable_mask, mixed_audio_sv);
+mixer m_mixer(sample_values[0], sample_values[1], sample_values[2], sample_values[3], sample_values[4], sample_values[5], sample_values[6], sample_values[7], sample_values[8], sample_values[9], sample_values[10], sample_values[11], enable_mask, mixed_audio_sv);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //PWM Audio Configuration
@@ -164,51 +193,54 @@ end
 //Clock Cycle Logic
 always @(posedge CLK100MHZ) begin
 
-    
-
     waveforms[0] <= 2'b0;
     waveforms[1] <= 2'b0;
     waveforms[2] <= 2'b0;
-    waveforms[3] <= 2'b11;
-    waveforms[4] <= 2'b11;
-    waveforms[5] <= 2'b11;
-    waveforms[6] <= 2'b1;
-    waveforms[7] <= 2'b11;
-    
+    waveforms[3] <= 2'b0;
+    waveforms[4] <= 2'b0;
+    waveforms[5] <= 2'b0;
+    waveforms[6] <= 2'b0;
+    waveforms[7] <= 2'b0;
+    waveforms[8] <= 2'b0;
+    waveforms[9] <= 2'b0;
+    waveforms[10] <= 2'b0;
+    waveforms[11] <= 2'b0;
 
     tick_periods[0] <= 13'd1493; //Middle C
     tick_periods[1] <= 13'd1330; //D
     tick_periods[2] <= 13'd1185; //E
-    tick_periods[3] <= 13'd2000;
-    tick_periods[4] <= 13'd1330;
-    tick_periods[5] <= 13'd1185;
-    tick_periods[6] <= 13'd1000;
-    tick_periods[7] <= 13'd1000;  
+    tick_periods[3] <= 13'd1055;
+    tick_periods[4] <= 13'd940;
+    tick_periods[5] <= 13'd838;
+    tick_periods[6] <= 13'd746;
+    tick_periods[7] <= 13'd665;  
+    tick_periods[8] <= 13'd592;  
+    tick_periods[9] <= 13'd527;  
+    tick_periods[10] <= 13'd470;  
+    tick_periods[11] <= 13'd419;  
 
-    if(btn_left)
-        enable_mask[0] <= 1'b1;
-    else
-        enable_mask[0] <= 1'b0;
 
     if(btn_center) begin
         leds[15:0] <= 16'hFFFF;
-        enable_mask[1] <= 1'b1;
     end else
-        enable_mask[1] <= 1'b0;
+        leds[15:0] <= 16'h9999;
         
-    if(btn_right)
-        enable_mask[2] <= 1'b1;
-    else
-        enable_mask[2] <= 1'b0;
-        
-    if(btn1)
-        enable_mask[3] <= 1'b1;
-    else
-        enable_mask[3] <= 1'b0;
+    enable_mask[0] <= btna1;
+    enable_mask[1] <= btna2;
+    enable_mask[2] <= btna3;
+    enable_mask[3] <= btna4;
+    enable_mask[4] <= btna7;
+    enable_mask[5] <= btna8;
+    enable_mask[6] <= btna9;
+    enable_mask[7] <= btna10;
+    enable_mask[8] <= btnb1;
+    enable_mask[9] <= btnb2;
+    enable_mask[10] <= btnb3;
+    enable_mask[11] <= btnb4;
         
     
     
-    leds[15:0] <= 16'h9999;
+    
 
 
 
