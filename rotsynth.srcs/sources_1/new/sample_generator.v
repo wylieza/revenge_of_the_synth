@@ -22,13 +22,14 @@ Enable Bit > No
 module sample_generator(
   input clk,
   input [7:0] phIndex,
-  input [1:0] waveform,		// 00: Sine, 	01: Square, 	11: Sawtooth
+  input [1:0] waveform,		// 00: Sine, 01: Square, 11: Sawtooth, 01: Triangle
   output reg [10:0] sampVal
 );
   
   // Setup wavefrom identifier constants
   parameter [1:0] SINE = 2'b00;
   parameter [1:0] SQUARE = 2'b01;
+  parameter [1:0] TRIANGLE = 2'b10;
   parameter [1:0] SAW = 2'b11;
   
   wire [10:0] sineSamp;		// Instantiate sine sample value variable
@@ -42,9 +43,16 @@ module sample_generator(
     
   always @(*) begin
     
+    //------------------------
+    // SINE
+    //------------------------
     if(waveform == SINE) begin      
       sampVal <= sineSamp;				// Set sinewave sample value
     end 
+
+    //------------------------
+    // SQUARE
+    //------------------------
     else if(waveform == SQUARE) begin
       if(phIndex < 8'd128) begin		// Set square wave sample value
         sampVal <= 11'd2047;	
@@ -53,10 +61,31 @@ module sample_generator(
         sampVal <= 11'd0;
       end    
     end
+
+    //------------------------
+    // SAWTOOTH
+    //------------------------
     else if(waveform == SAW) begin
       sampVal <= (phIndex<<3);	// Set sawtooth value (propto phase index)
-    end else begin
-      sampVal <= 1024;					// Default
+    end
+
+    //------------------------
+    // TRIANGLE
+    //------------------------
+    else if(waveform == TRIANGLE) begin
+      if(phIndex < 8'd128) begin		// First half
+        sampVal <= (phIndex<<4);
+      end 
+      else begin
+        sampVal <= 2047-(phIndex<<4);
+      end  
+    end
+
+    //------------------------
+    // OTHER? (Just in case)
+    //------------------------
+    else begin
+      sampVal <= 1024;    // Set output to "0"
     end
     
   end
