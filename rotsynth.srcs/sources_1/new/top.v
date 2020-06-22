@@ -130,7 +130,7 @@ decimal_to_bcd m_decimal_to_bcd_right(CLK100MHZ, ssd_right_value, ss_rd3, ss_rd2
 //Voices
 reg [12:0] tick_periods [11:0]; // ticT = 100e6/(freq*256)
 reg [1:0] waveforms [11:0];
-wire [10:0] sample_values [11:0]; // 00: Sine, 	01: Square, 	11: Sawtooth
+wire [10:0] sample_values [11:0]; // 00: Sine, 	01: Square, 10: Triangle, 11: Sawtooth
 
 
 //Function Generators
@@ -264,14 +264,10 @@ always @(posedge CLK100MHZ) begin
         
     if(btn_left && ~btnl_ls) begin
         waveform <= waveform - 2'b1;
-        if (waveform == 2'd3)
-            waveform <= 2'd1;
     end
         
     if(btn_right && ~btnr_ls) begin
         waveform <= waveform + 2'b1;
-        if (waveform == 2'd1)
-            waveform <= 2'd3;
     end
         
       
