@@ -1,6 +1,8 @@
 /**************************************************************************************
 ------ Module Description -----
-Author > Justin Wylie
+Author > Justin Wylie*
+*This code has been adapted from code provided for use during various labs in the
+EEE4020F course.
 
 Description > Converts a sample value to a pwm value to be outputted to pwm_aud
 
@@ -21,13 +23,15 @@ input [10:0] PWM_in,
 output reg PWM_out
 );
 
-reg [10:0] new_pwm=0;
-reg [10:0] PWM_ramp=0; 
-always @(posedge clk) 
-begin
-    if (PWM_ramp==0)new_pwm<=PWM_in;
-      PWM_ramp <= PWM_ramp + 1'b1;
-      PWM_out<=(new_pwm>PWM_ramp);
+reg [10:0] new_pwm = 0;
+reg [10:0] PWM_ramp = 0;
+
+always @(posedge clk) begin
+    if (PWM_ramp == 0)
+        new_pwm <= PWM_in;
+        
+    PWM_ramp <= PWM_ramp + 1'b1;
+    PWM_out <= (new_pwm > PWM_ramp);
 end
 
 endmodule
